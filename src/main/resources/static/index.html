@@ -1,5 +1,25 @@
 <head>
     <title>Blueprints</title>
+    <style>
+            form{
+                margin: 20px 0;
+            }
+            form input, button{
+                padding: 5px;
+            }
+            table{
+                width: 100%;
+                margin-bottom: 20px;
+                border-collapse: collapse;
+            }
+            table, th, td{
+                border: 1px solid #cdcdcd;
+            }
+            table th, table td{
+                padding: 10px;
+                text-align: left;
+            }
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/webjars/jquery/3.1.0/jquery.min.js"></script>
@@ -11,19 +31,16 @@
 	<h1>Blueprints </h1>
 	<label for="Author">Author:</label>
 	<input type="text" id="author" name="author"><br><br>
-	<button type="button">Get blueprints</button>
-	<div class="row">
-        <div class="col-lg-6">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Blueprint name</th>
-                        <th scope="col">Number of point</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-    <div>
-	<label for="Points">Total User Points:</label>
+	<button type="button" onclick="app.getBlueprints(author)">Get blueprints</button>
+	<table>
+        <thead>
+            <tr>
+                <th>Blueprint name</th>
+                <th>Number of points</th>
+                <th>Open</th>
+            </tr>
+        </thead>
+    </table>
+    <output id="points" type="text">Points:</output>
+    <output id="total" type="text"></output>
 </head>
