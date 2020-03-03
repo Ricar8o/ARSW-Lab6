@@ -14,7 +14,7 @@ var app = (function () {
     $("#blups").append(
     blueprintss.map(function(blueprint){
 	  i+= blueprint.points.length;
-      return "<tr><td>" + blueprint.name + "</td><td>" + blueprint.points.length + "</td><td><input type='checkbox' name='open'></td></tr>"
+      return "<tr><td>" + blueprint.name + "</td><td>" + blueprint.points.length + "</td><td><button type='button' onclick='app.getp(\"" +blueprint.name + '" , "' + blueprint.author + "\")'>Open</button></td></tr>"
       })  
     );
     $("#total").text(i);
@@ -24,20 +24,20 @@ var app = (function () {
     var lienzo = document.getElementById("Canvas");
     var conte = lienzo.getContext("2d");
     conte.clearRect(0, 0, lienzo.width, lienzo.height );
+	conte.beginPath();
   }
 
   var getPoints = function(name,author){
     api.getBlueprintsByNameAndAuthor(name,author, canvas);
-      
   }
 
   var canvas = function(n,blueprint) {
+	app.limpiar();
     var points = blueprint.points;
     var lienzo = document.getElementById("Canvas");
     var ctx = lienzo.getContext("2d");
     ctx.moveTo(points[0].x,points[0].y);
     for(var i = 0; i < points.length; i++) {
-      //console.log(points[i].x + ' ' + points[i].y);
       ctx.lineTo(points[i].x,points[i].y); 
     };
     ctx.stroke();
