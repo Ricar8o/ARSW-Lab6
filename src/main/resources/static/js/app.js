@@ -5,6 +5,7 @@ var app = (function () {
 
 
   var getAuthors = function(author){
+	$("#total").text(0);
 	$("#blups").find("tr:gt(0)").remove();
     api.getBlueprintsByAuthor(author, table);
   }
