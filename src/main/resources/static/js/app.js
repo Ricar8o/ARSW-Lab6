@@ -3,11 +3,11 @@ var api = apimock;
 
 var app = (function () {
 
-
   var getAuthors = function(author){
+	api = apiclient;
 	$("#total").text(0);
 	$("#blups").find("tr:gt(0)").remove();
-    api.getBlueprintsByAuthor(author, table);
+    apiclient.getBlueprintsByAuthor(author, table);
   }
 
   var table = function(a, blueprintss) {
@@ -29,6 +29,7 @@ var app = (function () {
   }
 
   var getPoints = function(name,author){
+	api = apiclient;
     api.getBlueprintsByNameAndAuthor(name,author, canvas);
   }
 
