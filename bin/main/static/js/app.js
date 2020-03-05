@@ -4,10 +4,15 @@ var api = apimock;
 var app = (function () {
 
   var getAuthors = function(author){
+  $("#authorP").text("");
+  $("#current").text("");
 	api = apiclient;
 	$("#total").text(0);
 	$("#blups").find("tr:gt(0)").remove();
-    apiclient.getBlueprintsByAuthor(author, table);
+  apiclient.getBlueprintsByAuthor(author, table);
+  if (author != ""){
+    $("#authorP").text(author+"'s blueprints:");
+  }
   }
 
   var table = function(a, blueprintss) {
@@ -19,19 +24,22 @@ var app = (function () {
       })  
     );
     $("#total").text(i);
+    
   }
 
   var limpiar = function(){
     var lienzo = document.getElementById("Canvas");
     var conte = lienzo.getContext("2d");
     conte.clearRect(0, 0, lienzo.width, lienzo.height );
-	conte.beginPath();
+    conte.beginPath();
   }
 
   var getPoints = function(name,author){
-	api = apiclient;
+	  api = apiclient;
     api.getBlueprintsByNameAndAuthor(name,author, canvas);
+    $("#current").text("Current blueprint: " + name);
   }
+
 
   var canvas = function(n,blueprint) {
 	app.limpiar();
@@ -45,9 +53,38 @@ var app = (function () {
     ctx.stroke();
   }
 
+  var gOffset = function getOffset(obj) {
+    var offsetLeft = 0;
+    var offsetTop = 0;
+    do {
+      if (!isNaN(obj.offsetLeft)) {
+          offsetLeft += obj.offsetLeft;
+      }
+      if (!isNaN(obj.offsetTop)) {
+          offsetTop += obj.offsetTop;
+      }   
+    } while(obj = obj.offsetParent );
+    return {left: offsetLeft, top: offsetTop};
+  } 
+
   return{
       get : getAuthors,
       getp : getPoints,
-      limpiar : limpiar
+      limpiar : limpiar,
+
+    
+    init:function(){
+      var canvas = document.getElementById("Canvas");
+      var ctx = canvas.getContext("2d");
+      var offset  = gOffset(canvas);
+
+      if(window.PointerEvent) {
+        canvas.addEventListener("pointerdown", function(event){
+          ctx.lineTo(event.pageX-offset.left , event.pageY-offset.top);
+          ctx.stroke();
+          console.info((event.pageX-offset.left)+','+(event.pageY-offset.top));
+        });
+      }
+    }
   };
 })();
