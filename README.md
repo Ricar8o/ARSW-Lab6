@@ -7,6 +7,6 @@
 
 # Instructions
 
-grade compilejava
+gradle compilejava
 
-grade bootRun
+gradle bootRun
