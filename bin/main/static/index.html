@@ -11,6 +11,8 @@
                 width: 100%;
                 margin-bottom: 20px;
                 border-collapse: collapse;
+                padding: 20px;
+                margin-top: 20px;
             }
             table, th, td{
                 border: 1px solid #cdcdcd;
@@ -19,6 +21,20 @@
                 padding: 10px;
                 text-align: left;
             }
+            .columna1 {
+                width:45%;
+                float:left;
+            }
+            .columna2 {
+                width:45%;
+                float:right;
+            }
+            .content div {
+                padding: 10px;
+            }
+            .todo{
+                margin: 20px;
+            }
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,26 +42,35 @@
     <script src="/webjars/bootstrap/4.1.2/js/bootstrap.min.js"></script>
 	<script src="js/apimock.js"></script>
 	<script src="js/app.js"></script>
+	<script src="js/apiclient.js"></script>
     <link rel="stylesheet"
       href="/webjars/bootstrap/4.1.2/css/bootstrap.min.css" />
-	<h1>Blueprints </h1>
-	<label for="Author">Author:</label>
-	<input type="text" id="author" name="author"><br><br>
-	<button type="button" onclick= "app.get(author.value)" >Get blueprints</button>
-	<table id ="blups">
-        <thead>
-            <tr>
-                <th>Blueprint name</th>
-                <th>Number of points</th>
-                <th>Open</th>
-            </tr>
-        </thead>
-    </table>
-    <output id="points" type="text">Points:</output>
-    <output id="total" type="text"></output>
-    <br/>
-    <input type="text" id="Name" name="name"><br><br>
-    <button type="button" onclick= "app.limpiar(),app.getp(Name.value,author.value)" >Get P</button>
-    <br/>
-    <canvas id="Canvas" width="480" height="380" style="border:1px solid #000F11;"></canvas>
+    
+    <div class="todo">
+        <h1>Blueprints </h1>
+        <div>
+            <label for="Author">Author:</label>
+            <input type="text" id="author" name="author">
+            <button style="margin-left: 100px;" type="button" onclick= "app.limpiar(), app.get(author.value)" >Get blueprints</button>
+            <br/>
+        </div>
+        <div class="columna1">
+            <table id ="blups">
+                <thead>
+                    <tr>
+                        <th>Blueprint name</th>
+                        <th>Number of points</th>
+                        <th>Open</th>
+                    </tr>
+                </thead>
+            </table>
+            <output id="points" type="text">Total user points:</output>
+            <output id="total" type="text">0</output>
+            <br/>
+        </div>
+
+        <div class="columna2">
+            <canvas id="Canvas" width="480" height="380" style="border:1px solid #000F11;"></canvas>
+        </div>
+    </div>
 </head>
