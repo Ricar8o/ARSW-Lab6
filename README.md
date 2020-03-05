@@ -8,4 +8,5 @@
 # Instructions
 
 grade compilejava
+
 grade bootRun
