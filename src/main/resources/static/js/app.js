@@ -3,6 +3,11 @@ var api = apimock;
 
 var app = (function () {
 
+  var puntos = [];
+  var currentAuthor;
+  var currentBluePrint;
+  var requestResponse;
+
   var getAuthors = function(author){
   $("#authorP").text("");
   $("#current").text("");
@@ -13,6 +18,7 @@ var app = (function () {
   if (author != ""){
     $("#authorP").text(author+"'s blueprints:");
   }
+  currentAuthor = author;
   }
 
   var table = function(a, blueprintss) {
@@ -24,7 +30,6 @@ var app = (function () {
       })  
     );
     $("#total").text(i);
-    
   }
 
   var limpiar = function(){
@@ -38,6 +43,7 @@ var app = (function () {
 	  api = apiclient;
     api.getBlueprintsByNameAndAuthor(name,author, canvas);
     $("#current").text("Current blueprint: " + name);
+    currentBluePrint = name;
   }
 
 
@@ -67,12 +73,63 @@ var app = (function () {
     return {left: offsetLeft, top: offsetTop};
   } 
 
+  var addPoints = function (){
+    for(var i = 0; i < puntos.length; i++) {
+      requestResponse.points.push(puntos[i]); 
+    };
+    puntos = [];
+  }
+
+  var blueprintGet = function () {
+    var promise = $.get('http://localhost:8080/blueprints/' + currentAuthor + '/' + currentBluePrint);
+
+    promise.then(
+            function (data) {
+                requestResponse = data;
+            },
+            function () {
+                requestResponse = {author : currentAuthor, name : "", points : []};
+                alert("$.get failed!");
+            }
+    );
+    return promise;
+  };
+
+    
+  var putBluePrint = function(){
+    var putPromise = $.ajax({
+          url: 'http://localhost:8080/blueprints/' + currentAuthor + '/' + currentBluePrint,
+          type: 'PUT',    
+          data: JSON.stringify(requestResponse),
+          contentType: "application/json",
+    });
+    putPromise.then(
+                function () {
+                    console.info("OK");
+                    getAuthors(currentAuthor);
+                    getPoints(currentBluePrint,currentAuthor);
+                },
+                function () {
+                    console.info("ERROR");
+                }
+
+        );
+
+    return putPromise;
+  };
+    
+
   return{
       get : getAuthors,
       getp : getPoints,
       limpiar : limpiar,
 
-    
+      addOrUpdate: function () {
+        blueprintGet()
+        .then(addPoints)
+        .then(putBluePrint);
+      },
+
     init:function(){
       var canvas = document.getElementById("Canvas");
       var ctx = canvas.getContext("2d");
@@ -80,9 +137,10 @@ var app = (function () {
 
       if(window.PointerEvent) {
         canvas.addEventListener("pointerdown", function(event){
+          var point = {x: event.pageX-offset.left, y : event.pageY-offset.top}
+          puntos.push(point);
           ctx.lineTo(event.pageX-offset.left , event.pageY-offset.top);
           ctx.stroke();
-          console.info((event.pageX-offset.left)+','+(event.pageY-offset.top));
         });
       }
     }
