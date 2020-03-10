@@ -49,13 +49,13 @@
     <div class="todo">
         <h1>Blueprints </h1>
         <div>
-            <label for="Author">Author:</label>
+            <label style="margin-right: 40px;" for="Author">Author:</label>
             <input type="text" id="author" name="author">
             <button style="margin-left: 100px;" type="button" onclick= "app.limpiar(), app.get(author.value)" >Get blueprints</button>
             <br/>
         </div>
         <div class="columna1">
-            <output id="authorP" type="text" style="margin-top: 20px;"></output>
+            <output id="authorP" type="text" style="margin-top: 30px;"></output>
             
             <table id ="blups">
                 <thead>
@@ -72,12 +72,14 @@
         </div>
 
         <div class="columna2">
+            <button style="margin-top: 20px;background-color:rgb(202, 68, 95)" type="button" onclick= "" >Create new blueprint</button>
             <output id="current" type="text" ></output>
             <body onLoad="app.init()">
                 <canvas id="Canvas" width="700" height="480" style="border:1px solid #000F11;margin-top: 20px;"  ></canvas>
             </body>
+            <button style="margin-top: 20px;background-color:#429b19" type="button" onclick= "app.addOrUpdate()" >Save/Update</button>
+            <button style="margin-top: 20px;background-color:#d12798" type="button" onclick= "" >Delete</button>
         </div>
-        <button style="margin-top: 20px;" type="button" onclick= "app.addOrUpdate()" >Save/Update</button>
-        <button style="margin-top: 20px;" type="button" onclick= "" >Delete</button>
+        
     </div>
 </head>

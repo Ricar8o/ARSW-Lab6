@@ -1,6 +1,6 @@
 
 var api = apimock;
-
+var Pintar = false;
 var app = (function () {
 
   var puntos = [];
@@ -40,6 +40,7 @@ var app = (function () {
   }
 
   var getPoints = function(name,author){
+    Pintar = true;
 	  api = apiclient;
     api.getBlueprintsByNameAndAuthor(name,author, canvas);
     $("#current").text("Current blueprint: " + name);
@@ -137,10 +138,13 @@ var app = (function () {
 
       if(window.PointerEvent) {
         canvas.addEventListener("pointerdown", function(event){
-          var point = {x: event.pageX-offset.left, y : event.pageY-offset.top}
-          puntos.push(point);
-          ctx.lineTo(event.pageX-offset.left , event.pageY-offset.top);
-          ctx.stroke();
+          console.log(Pintar);
+          if(Pintar){
+            var point = {x: event.pageX-offset.left, y : event.pageY-offset.top}
+            puntos.push(point);
+            ctx.lineTo(event.pageX-offset.left , event.pageY-offset.top);
+            ctx.stroke();
+          }
         });
       }
     }
