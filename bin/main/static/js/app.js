@@ -1,6 +1,7 @@
 
 var api = apimock;
 var Pintar = false;
+var nuevo = false;
 var app = (function () {
 
   var puntos = [];
@@ -9,6 +10,7 @@ var app = (function () {
   var requestResponse;
 
   var getAuthors = function(author){
+  Pintar = false; 
   $("#authorP").text("");
   $("#current").text("");
 	api = apiclient;
@@ -33,6 +35,7 @@ var app = (function () {
   }
 
   var limpiar = function(){
+    puntos = [];
     var lienzo = document.getElementById("Canvas");
     var conte = lienzo.getContext("2d");
     conte.clearRect(0, 0, lienzo.width, lienzo.height );
@@ -40,6 +43,9 @@ var app = (function () {
   }
 
   var getPoints = function(name,author){
+    currentAuthor = author;
+    currentBluePrint = name;
+    nuevo = false;
     Pintar = true;
 	  api = apiclient;
     api.getBlueprintsByNameAndAuthor(name,author, canvas);
@@ -49,7 +55,7 @@ var app = (function () {
 
 
   var canvas = function(n,blueprint) {
-	app.limpiar();
+	  app.limpiar();
     var points = blueprint.points;
     var lienzo = document.getElementById("Canvas");
     var ctx = lienzo.getContext("2d");
@@ -78,7 +84,6 @@ var app = (function () {
     for(var i = 0; i < puntos.length; i++) {
       requestResponse.points.push(puntos[i]); 
     };
-    puntos = [];
   }
 
   var blueprintGet = function () {
@@ -89,7 +94,6 @@ var app = (function () {
                 requestResponse = data;
             },
             function () {
-                requestResponse = {author : currentAuthor, name : "", points : []};
                 alert("$.get failed!");
             }
     );
@@ -118,18 +122,68 @@ var app = (function () {
 
     return putPromise;
   };
-    
+
+  var postBluePrint = function(){
+    var nbp = {author : currentAuthor, name : currentBluePrint, points : puntos};
+    var postPromise = $.ajax({
+          url: 'http://localhost:8080/blueprints/',
+          type: 'POST',    
+          data: JSON.stringify(nbp),
+          contentType: "application/json",
+    });
+    postPromise.then(
+                function () {
+                    getAuthors(currentAuthor);
+                    getPoints(currentBluePrint,currentAuthor);
+                    console.info("OK");
+                },
+                function () {
+                    console.info("ERROR");
+                }
+
+        );
+
+    return postPromise;
+  };
+  
+  var addOrUpdate = function(){
+    if (nuevo){
+      app.add();
+    }
+    else{
+      app.update();
+    }
+  }
+
+  var newBp = function(){
+    currentAuthor = prompt("Author name", ""); 
+    currentBluePrint = prompt("Blueprint name",  "");  
+    if ((currentAuthor == "") || (currentBluePrint == "")){
+      Pintar = false;
+      alert("enter a valid author and blueprint name");
+    }
+    else{
+      Pintar = true;
+      nuevo = true;
+    }
+  }
 
   return{
       get : getAuthors,
       getp : getPoints,
       limpiar : limpiar,
 
-      addOrUpdate: function () {
+      addOrUpdate: addOrUpdate,
+
+      update: function () {
         blueprintGet()
         .then(addPoints)
         .then(putBluePrint);
       },
+
+      add: postBluePrint,
+
+      createBp : newBp,
 
     init:function(){
       var canvas = document.getElementById("Canvas");
@@ -138,7 +192,7 @@ var app = (function () {
 
       if(window.PointerEvent) {
         canvas.addEventListener("pointerdown", function(event){
-          console.log(Pintar);
+          console.log(Pintar);  
           if(Pintar){
             var point = {x: event.pageX-offset.left, y : event.pageY-offset.top}
             puntos.push(point);
