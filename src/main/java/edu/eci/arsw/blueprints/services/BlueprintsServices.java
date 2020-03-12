@@ -77,4 +77,13 @@ public class BlueprintsServices {
         return bpp.getBlueprintByAuthor(author);
     }
 
+    /**
+     * @param author blueprint's author
+     * @param name blueprint's name
+     * @throws BlueprintNotFoundException if the given author doesn't exist
+     */
+	public void deleteBlueprint(String author, String name) throws BlueprintNotFoundException{
+        bpp.deleteBlueprint(author,name);
+	}
+
 }

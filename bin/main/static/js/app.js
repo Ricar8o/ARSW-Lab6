@@ -146,6 +146,23 @@ var app = (function () {
     return postPromise;
   };
   
+  var deleteBluePrint = function(){
+    var deletePromise = $.ajax({
+          url: 'http://localhost:8080/blueprints/' + currentAuthor + '/' + currentBluePrint,
+          type: 'DELETE',
+    });
+    deletePromise.then(
+      function () {
+          getAuthors(currentAuthor);
+          console.info("OK");
+      },
+      function () {
+          console.info("ERROR");
+      }
+    );
+  };
+
+
   var addOrUpdate = function(){
     if (nuevo){
       app.add();
@@ -184,6 +201,8 @@ var app = (function () {
       add: postBluePrint,
 
       createBp : newBp,
+
+      del: deleteBluePrint,
 
     init:function(){
       var canvas = document.getElementById("Canvas");
